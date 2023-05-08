@@ -27,44 +27,51 @@ public class UserTypesService {
 		try {
 			UserTypes userTypes = UserTypes.builder().userTypeName(userTypePaylode.getUserTypeName())
 					.id(userTypePaylode.getId()).build();
-			if (userTypePaylode.getId() != 1) {
+			if (userTypePaylode.getId() != null && userTypePaylode.getId() != 1 && userTypePaylode.getId() > 0) {
 				Optional<UserTypes> existingUserRoleRecord = userTypesRepository.findById(userTypePaylode.getId());
 				// userTypeId 1 is Admin User
-				if (userTypePaylode.getId() > 0) {
-					if (existingUserRoleRecord.isPresent()) {
-						userTypes = existingUserRoleRecord.get();
-						userTypes.setUpdatedOn(LocalDateTime.now());
-						userTypes = userTypesRepository.save(userTypes);
-						responseBean.setStatus(HttpStatus.OK);
-						responseBean.setMessage("Successfully updated the record");
-						responseBean.setData(null);
-					} else {
-						responseBean.setStatus(HttpStatus.OK);
-						responseBean.setReturnCode(1);
-						responseBean.setMessage("Record does not exist");
-					}
-				} else {
+				if (existingUserRoleRecord.isPresent()) {
 					userTypes = existingUserRoleRecord.get();
+					userTypes.setUpdatedOn(LocalDateTime.now());
+					userTypes.setUserTypeName(userTypePaylode.getUserTypeName());
 					userTypes = userTypesRepository.save(userTypes);
 					responseBean.setStatus(HttpStatus.OK);
+					responseBean.setMessage("Successfully updated the record");
+					responseBean.setData(null);
+				} else {
+					userTypes.setCreatedOn(LocalDateTime.now());
+					userTypes.setIsActive(true);
+					userTypes = userTypesRepository.save(userTypes);
+					responseBean.setStatus(HttpStatus.CREATED);
 					responseBean.setReturnCode(1);
-					responseBean.setMessage("Successfully added record");
+					responseBean.setMessage("Record does not exist new record inserted");
 
 				}
 			} else {
+				if ( userTypePaylode.getId() == null ) {
+					userTypes.setCreatedOn(LocalDateTime.now());
+					userTypes.setIsActive(true);
+					userTypes = userTypesRepository.save(userTypes);
+					responseBean.setStatus(HttpStatus.CREATED);
+					responseBean.setReturnCode(1);
+					responseBean.setMessage("Successfully added record");
+				} else {
+					responseBean.setStatus(HttpStatus.UNAUTHORIZED);
+					responseBean.setReturnCode(1);
+					responseBean.setMessage("access denied");
+				}
 
-				responseBean.setStatus(HttpStatus.OK);
-				responseBean.setReturnCode(1);
-				responseBean.setMessage("access denied to create this user ");
 			}
 
-		} catch (Exception e) {
+		}
+
+		catch (Exception e) {
 			log.error("Exception occured : {}", e);
 			responseBean.setStatus(HttpStatus.EXPECTATION_FAILED);
 			responseBean.setMessage("Failed to add record");
 
 		}
 		return new ResponseEntity<>(responseBean, responseBean.getStatus());
-	}
 
+	}
 }
