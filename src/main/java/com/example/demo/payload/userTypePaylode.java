@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class userTypePaylode {
 	private Long id;
 	private String userTypeName;
+	
 
 }
