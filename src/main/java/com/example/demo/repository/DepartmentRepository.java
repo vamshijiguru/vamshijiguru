@@ -8,4 +8,5 @@ import com.example.demo.model.Department;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long>  {
 
+	long countById(Long id);
 }
