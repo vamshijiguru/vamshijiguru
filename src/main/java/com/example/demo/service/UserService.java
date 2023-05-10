@@ -24,8 +24,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
-	private UserTypesService userTypesService;
+
 
 	@Autowired
 	private UserTypesRepository userTypesRepository;
@@ -54,7 +53,7 @@ public class UserService {
 
 				}
 			}  else {
-				if (existingUserType.isPresent() && userpayload.getId() == null) {
+				if (existingUserType.isPresent() && userpayload.getId() == null && userpayload.getAge() > 18) {
 					user.setCreatedOn(LocalDateTime.now());
 					user.setIsActive(true);
 					user = userRepository.save(user);
@@ -65,7 +64,7 @@ public class UserService {
 				else
 				{
 			responseBean.setStatus(HttpStatus.BAD_REQUEST);
-			responseBean.setMessage("userType not present ");
+			responseBean.setMessage("userType not present or user age is not grater then  18 ");
 				}
 			}
 		} catch (Exception e) {

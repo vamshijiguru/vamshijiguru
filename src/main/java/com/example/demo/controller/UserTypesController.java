@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.payload.userTypePaylode;
 import com.example.demo.service.UserTypesService;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/registrations")
 public class UserTypesController {
