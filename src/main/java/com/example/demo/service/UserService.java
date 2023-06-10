@@ -24,8 +24,6 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-
-
 	@Autowired
 	private UserTypesRepository userTypesRepository;
 
@@ -37,11 +35,10 @@ public class UserService {
 					.username(userpayload.getUsername()).dateOfBirth(userpayload.getDateOfBirth())
 					.password(userpayload.getPassword()).userTypeId(userpayload.getUserTypeId()).build();
 			Optional<UserTypes> existingUserType = userTypesRepository.findById(userpayload.getUserTypeId());
-			if (userpayload.getId() != null && userpayload.getUserTypeId() != null && userpayload.getAge() > 18 
-					&& userpayload.getUserTypeId() > 0 
-					) {
+			if (userpayload.getId() != null && userpayload.getUserTypeId() != null && userpayload.getAge() > 18
+					&& userpayload.getUserTypeId() > 0 && userpayload.getUserTypeId() != 1) {
 				Optional<User> existingUserRecord = userRepository.findById(userpayload.getId());
-				if ( existingUserType.isPresent() && existingUserRecord.isPresent()) {
+				if (existingUserType.isPresent() && existingUserRecord.isPresent()) {
 					user.setUpdatedOn(LocalDateTime.now());
 					user.setIsActive(true);
 					user = userRepository.save(user);
@@ -51,20 +48,19 @@ public class UserService {
 					responseBean.setReturnCode(1);
 					responseBean.setMessage("Successfully updated the record");
 
-				}
-			}  else {
-				if (existingUserType.isPresent() && userpayload.getId() == null && userpayload.getAge() > 18) {
+				} 
+			} else {
+				if (existingUserType.isPresent() && userpayload.getId() == null && userpayload.getAge() > 18
+						&& userpayload.getUserTypeId() != 1) {
 					user.setCreatedOn(LocalDateTime.now());
 					user.setIsActive(true);
 					user = userRepository.save(user);
 					responseBean.setStatus(HttpStatus.CREATED);
 					responseBean.setReturnCode(1);
 					responseBean.setMessage("Successfully inserted the record");
-				}
-				else
-				{
-			responseBean.setStatus(HttpStatus.BAD_REQUEST);
-			responseBean.setMessage("userType not present or user age is not grater then  18 ");
+				} else {
+					responseBean.setStatus(HttpStatus.BAD_REQUEST);
+					responseBean.setMessage("userType not present");
 				}
 			}
 		} catch (Exception e) {

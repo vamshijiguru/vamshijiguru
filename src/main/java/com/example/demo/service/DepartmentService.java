@@ -28,9 +28,8 @@ public class DepartmentService {
 			Department departement = Department.builder().deptName(departementpayload.getDeptName())
 					.id(departementpayload.getId()).build();
 			long count = departmentRepository.count();
-			long duplicate = departmentRepository.countById(departementpayload.getId());
-			if (departementpayload.getId() != null && departementpayload.getId() > 0 && count < 5
-					&& (duplicate == 0 || duplicate == 1)) {
+			// long duplicate = departmentRepository.countById(departementpayload.getId());
+			if (departementpayload.getId() != null && departementpayload.getId() > 0 && count < 5) {
 				Optional<Department> existingRecord = departmentRepository.findById(departementpayload.getId());
 				if (!existingRecord.isPresent()) {
 					departement.setCreatedOn(LocalDateTime.now());

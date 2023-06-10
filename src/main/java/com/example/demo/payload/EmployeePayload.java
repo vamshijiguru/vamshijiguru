@@ -18,5 +18,5 @@ public class EmployeePayload {
 	private LocalDate date_of_joining;
 	private Long user_id;
 	private Long dept_id ;
-	private String dept_name ;
+
 }
